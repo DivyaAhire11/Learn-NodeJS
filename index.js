@@ -2,12 +2,28 @@ import express from "express"
 
 const app = express();
 const PORT =3000 || process.env.PORT
-const OBJ = {
-    msg : "WelCome! In Our Website"
+
+const TASK = [{
+  task_name : "wakeup at 5 AM",
+  task_description : "Follow EveryDay"
 }
+]
 
 app.get("/",(req,res)=>{
-    res.json({OBJ});
+    res.json({"message" : "welCome"});
+})
+app.get("/getTask",(req,res)=>{
+  try {
+     res.json({ data : TASK,
+        msg : "Have a Nice Day"
+     })
+  } catch (error) {
+    res.json({
+        data : [],
+        msg : "error"
+    })
+  }
+    
 })
 
 app.listen(PORT ,()=>{
