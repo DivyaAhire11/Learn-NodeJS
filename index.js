@@ -4,13 +4,20 @@ const app = express();
 const PORT =3000 || process.env.PORT
 
 const TASK = [{
-  task_name : "wakeup at 5 AM",
+  task_name : "Wake Up at 4 AM",
   task_description : "Follow EveryDay"
+},
+{
+  task_name : "Meditation",
+  task_description : "Train Your Brain With Good Habbit"
 }
 ]
 
-app.get("/",(req,res)=>{
-    res.json({"message" : "welCome"});
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+
+app.get("/health",(req,res)=>{
+   res.send("Server become Healthy Now Thanks...")
 })
 app.get("/getTask",(req,res)=>{
   try {
@@ -24,6 +31,14 @@ app.get("/getTask",(req,res)=>{
     })
   }
     
+})
+app.post("/addTask",(req,res)=>{
+   try {
+       console.log(req);
+      
+   } catch (error) {
+    
+   }
 })
 
 app.listen(PORT ,()=>{
