@@ -37,20 +37,54 @@ app.post("/addSong", (req, res) => {
             poster,
             song_url,
             like: false,
-            comment : []
+            comment: []
         }
 
         SONG_INFO.push(NewSong)
 
 
     } catch (error) {
-       
+
         res.json({
             data: [],
             message: error.message
         })
     }
 
+})
+app.post("/addComment/:id", (req, res) => {
+    try {
+        let { comment } = req.body;
+        let { id } = req.params
+
+        if (!id) {
+            res.json({
+                data: null,
+                message: "id is required"
+            })
+        }
+        if (!comment) {
+            res.json({
+                data: null,
+                message: "comment is required"
+            })
+        }
+
+        let foundSong = SONG_INFO.find((song) => song.id == id);
+        if (!foundSong) {
+            res.json({
+                data: [],
+                message: `Song Not Found For Id ${id}`
+            })
+        }
+       foundSong?.comment.unshift({
+           "name" : "user",
+           comment
+       })
+
+    } catch (error) {
+
+    }
 })
 app.delete("/deletesong/:id", (req, res) => {
     try {
