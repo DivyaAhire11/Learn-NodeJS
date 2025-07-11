@@ -1,5 +1,6 @@
 import express from "express"
 import cors from "cors"
+import SONG_INFO from "./DB.js"
 
 const app = express()
 const PORT = 3000 || process.env.PORT
@@ -15,102 +16,80 @@ app.get("/health", (req, res) => {
         message: "server running healthy"
     })
 })
-app.post("/addtask", (req, res) => {
-    try {
-        let {Taskname, TaskDescription} = req.body;
-        if (!{Taskname, TaskDescription}) {
-            res.json({
-                data: [],
-                message : "Data Not present"
-            })
-        }
-        TASK.push({
-             id: TASK.length+1,
-             Taskname, 
-             TaskDescription
-        });
-    } catch (error) {
-        res.json({
-           data: [],
-            message: error.message
-        })
-    }
-})
-app.get("/gettask", (req, res) => {
-    try {
-        res.json({
-            data: TASK,
-            message: "message done"
-        })
-    } catch (error) {
-        res.json({
-           data: [],
-            message: error.message
-        })
-    }
-})
 
-app.get("/gettask/:id", (req,res)=>{
-      try {
-        let {id} = req.params
-        
-        if(!id)
-            res.json({
-              data : null,
-            message : "id is required"
+app.get("/songs" , (req,res)=>{
+    try {
+         res.json(SONG_INFO);
+    } catch (error) {
+        res.json({
+            data : [],
+            message : "data not found"
         })
-      let findTASK = TASK.filter((task)=>task.id == id)
-      if(findTASK.length == 0){
+    }
+})
+app.post("/addSong" , (req,res)=>{
+       try {
+           let data = req.body
+           if(!data){
             res.json({
                 data : null,
-                message : "task not found"
+                message : error.message
             })
-      }else{
-        res.json({
-             data : findTASK,
-             message :" Task found "
-        })
-      }
-   
-      } catch (error) {
-          res.json({
-            data : null,
-            message : error.message
-          })
-      }
-})
-app.delete("/deleteTask/:id",(req,res)=>{
-  try {
-     let {id} = req.params
-      if(!id){
-         res.json({
-              data : null,
-             message : "id is required"
-        })   
-      }
-     let IndexId= TASK.findIndex((task)=>task.id == id)
-     if(!IndexId){
-         res.json({
-              data : null,
-             message : "task not found"
-        })   
-      }
-        let deletetask = TASK.splice(IndexId,1)
+           }
+           let NewSong = {  
+                id : SONG_INFO.length + 1,
+                data,
+                message : "Song add successfully"
+        }
+           
+        SONG_INFO.push(NewSong)
 
-        return res.json({
-             data : deletetask,
-             message :" Task delete successfully "
-        })
       
-
-  } catch (error) {
-      res.json({
-        data : null,
-        message : error.message
-      })
-  }
+       } catch (error) {
+            req.json({
+                 data: [],
+                message: error.message
+            })
+       }
 
 })
+app.delete("/deletesong/:id",(req,res)=>{
+      try {
+          let {id} = req.params
+          if(!id){
+               res.json({
+                   data : [],
+                   message : "id must be required"
+               })
+          }
+              let FindSong= SONG_INFO.find((song)=>song.id == id)
+          if(!FindSong){
+            res.json({
+                data : null,
+                message : error.message
+            })
+          }
+        let findIdx =  SONG_INFO.findIndex((song)=>song.id == id)
+        if(findIdx == -1){
+             return res.json({
+                data : null,
+                message : "not found"
+             })
+     }  
+         let removeSong = SONG_INFO.splice(FindSong,1)
+           return res.json({
+                data : removeSong,
+                message :" Song delete successfully "
+           })
+
+        } catch (error) {
+             res.json({
+                data : null,
+                message : error.message
+            })
+      }
+})
+
 app.listen(PORT, () => {
     console.log(`server runs on port : ${PORT}`);
 })
