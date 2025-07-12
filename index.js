@@ -9,9 +9,6 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ encoded: true }))
 
-const TASK = []
-
-
 app.get("/songs", (req, res) => {
     try {
         res.json(SONG_INFO);
@@ -77,13 +74,16 @@ app.post("/addComment/:id", (req, res) => {
                 message: `Song Not Found For Id ${id}`
             })
         }
-       foundSong?.comment.unshift({
-           "name" : "user",
-           comment
-       })
+        foundSong?.comment.unshift({
+            "name": "user",
+            comment
+        })
 
     } catch (error) {
-
+        res.json({
+            data: null,
+            message: error.message
+        })
     }
 })
 app.delete("/deletesong/:id", (req, res) => {
