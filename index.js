@@ -1,58 +1,33 @@
 import express from "express"
 import cors from "cors"
-import bcrypt from "bcrypt"
+import mongoose from "mongoose"
 
-const app = express()
-const PORT = 3000
+const app = express();
+const PORT = 3000 || process.env.PORT
 
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({ extended : true}))
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({extended : true}))
 
-app.post("/signup", async(req, res) => {
+const connectdb = async()=>{
      try {
-          let { userName, password } = req.body         
-          if (!userName) {
-               res.json({
-                    data: [],
-                    message: "user name is required",
-                    success  : false
-               })
-          }
-           if (!password) {
-               res.json({
-                    data: [],
-                    message: "password is required",
-                    success  : false
-               })
-          }
-          let res = await bcrypt.hash(password,10)
-             console.log(res)
-             
+     //    await mongoose.connect(``);
+        console.log("DataBase is Connected");
      } catch (error) {
-               res.json({
-                    data: null,
-                    message: error.message,
-                    success  : false
-               })
+          console.log(error);
      }
-})
-
-app.get("/health", (req, res) => {
+}
+app.get("/health",(req,res)=>{
      try {
-          res.json({
-               data: [],
-               message: "Server is running Healthy",
-               success: true
+          return res.json({
+               data : [],
+               message : "Server is running healthy"
           })
      } catch (error) {
-          res.json({
-               data: null,
-               message: error.message,
-               success: false
-          })
+          console.log(error)
      }
 })
-app.listen(PORT, () => {
-     console.log(`server runs on the port ${PORT}`);
+app.listen(PORT , ()=>{
+     connectdb();
+     console.log(`Port runs on server ${PORT}`);
 })
