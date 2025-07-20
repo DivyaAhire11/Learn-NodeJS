@@ -1,33 +1,24 @@
 import express from "express"
 import cors from "cors"
-import mongoose from "mongoose"
 
 const app = express();
 const PORT = 3000 || process.env.PORT
 
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({extended : true}))
+app.use(express.urlencoded({ extended: true }))
 
-const connectdb = async()=>{
-     try {
-     //    await mongoose.connect(``);
-        console.log("DataBase is Connected");
-     } catch (error) {
-          console.log(error);
-     }
-}
-app.get("/health",(req,res)=>{
-     try {
-          return res.json({
-               data : [],
-               message : "Server is running healthy"
-          })
-     } catch (error) {
-          console.log(error)
-     }
+//my function
+import connectdb from "./config/connectdb.js";
+
+
+app.get("/health", (req, res) => {
+     return res.json({
+          status: "Server is running healthy"
+     })
 })
-app.listen(PORT , ()=>{
-     connectdb();
+
+app.listen(PORT, () => {
      console.log(`Port runs on server ${PORT}`);
+     connectdb();
 })
