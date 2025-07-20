@@ -10,7 +10,26 @@ app.use(express.urlencoded({ extended: true }))
 
 //my function
 import connectdb from "./config/connectdb.js";
+import emp from "./models/emp.model.js";
 
+app.get("/signup", async(req, res) => {
+     try {
+         const createEmp = await emp.create({
+               name: "Purva",
+               email: "purva1234@gamil.com",
+               password: 1111
+          })
+
+          let savedEmp = await createEmp.save();
+          return res.json({
+               data : savedEmp
+          })
+
+     } catch (error) {
+          console.log(error)
+     }
+})
+   
 
 app.get("/health", (req, res) => {
      return res.json({
