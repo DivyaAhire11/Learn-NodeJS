@@ -15,9 +15,10 @@ import emp from "./models/emp.model.js";
 app.get("/signup", async(req, res) => {
      try {
          const createEmp = await emp.create({
-               name: "Purva",
-               email: "purva1234@gamil.com",
-               password: 1111
+               name: "XYZ",
+               email: "xyz1234@gamil.com",
+               password: 9999,
+               address : "nashik"
           })
 
           let savedEmp = await createEmp.save();
@@ -33,7 +34,9 @@ app.get("/signup", async(req, res) => {
 
 app.get("/health", (req, res) => {
      return res.json({
+          
           status: "Server is running healthy"
+         
      })
 })
 

@@ -12,6 +12,9 @@ const empSchema = new Schema({
     password : {
         type : Number,
         required : true
+    },
+    address : {
+         type : String
     }
 })
 
