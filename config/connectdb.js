@@ -1,18 +1,14 @@
-import mongoose from "mongoose"
-import dotenv from "dotenv"
+import { config } from "dotenv"
+config()
 
-dotenv.config();
-const password = process.env.MY_PASSWORD
-
-const connectdb = async () => {
+const connectdb = async (req, res) => {
     try {
+        await mongoose.connect(process.env.MONGODB_URL);
+        console.log("dataBase Connected");
 
-        await mongoose.connect(`mongodb+srv://DivyaAhire:${password}@cluster0.vtyi9tf.mongodb.net/MERN-1`)
-        console.log("DataBase is Connected");
-  
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
 }
 
-export default connectdb;
+export default connectdb 
