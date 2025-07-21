@@ -1,4 +1,5 @@
-import user from "../models/user";
+import user from "../models/user.js";
+import bcrypt from "bcrypt"
 
 const signup = async (req, res) => {
     try {
@@ -21,8 +22,11 @@ const signup = async (req, res) => {
                 message : "email already exit please login"
             })
           }
-
-    } catch (error) {
+       
+         let hashPassword = await bcrypt.hash(password,10)
+         console.log(hashPassword);
+    
+        } catch (error) {
         res.json({
 
         })

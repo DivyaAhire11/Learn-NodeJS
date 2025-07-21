@@ -15,7 +15,7 @@ import connectdb  from "./config/connectdb.js"
 
 app.get("/health", healthControler);
 
-app.post("/signUp",signup)
+app.post("/signUp",signup);
 
 app.listen(PORT, () => {
      console.log(`Server run on port no : ${PORT}`);
