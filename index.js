@@ -9,7 +9,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
 //my controlers
-import { healthControler, signup } from "./controller/generalController.js";
+import { healthControler } from "./controller/generalController.js";
+import { signup } from "./controller/userSignUpController.js";
 import connectdb  from "./config/connectdb.js"
 
 app.get("/health", healthControler);
