@@ -1,3 +1,4 @@
+import { mergeConfig } from "axios";
 import user from "../models/user.js";
 import bcrypt from "bcrypt"
 
@@ -27,31 +28,66 @@ const signup = async (req, res) => {
         // if user not already exits then
         let hashPassword = await bcrypt.hash(password, 10);
 
-        let createUser =await user.create({
+        let createUser = await user.create({
             name,
             email,
-            password: hashPassword  
+            password: hashPassword
         })
-      
-       if(createUser){
-           
+
+        if (createUser) {
+
             createUser = await createUser.save();
-            
+
             return res.json({
-                message : "user create successfully",
-                data : createUser
+                message: "user create successfully",
+                data: createUser
             })
-       }else{
-         return res.json({
-                message : "something went wrong",
+        } else {
+            return res.json({
+                message: "something went wrong",
             })
-       }
+        }
     } catch (error) {
         res.json({
             message: error.message
-           
+
         })
     }
 }
+ const login = async(req,res)=>{
+         try {
+            let {email,password} = req.body
+            let requiredfield = ["email","password"];
+            requiredfield.forEach((field)=>{
+                if(!req.body[field]){
+                    return res.json({
+                        message : `${field} is required`
+                    })
+                }
+            })
+           let checkUserExit = await user.findOne({email})
+           if(!checkUserExit){
+               res.json({
+                        message : "email does not exit please signup"
+                    })
+           }
+           let isPasswordMatch = await bcrypt.compare(password,checkUserExit?.password)
+        //    console.log(isPasswordMatch); //true
+          if(!isPasswordMatch){
+               return res.json({
+                message : "invalid credentials"
+               })
+           }else{
+            return res.json({
+                message : "login successfully",
+                data : checkUserExit
+            })
+           }
+        } catch (error) {
+             res.json({
+            message: error.message
 
-export { signup }
+        })
+         }
+ }
+export { signup,login }
