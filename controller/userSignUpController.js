@@ -8,8 +8,7 @@ const signup = async (req, res) => {
         let requiredData = ["name", "email", "password"];
 
         requiredData.forEach((data) => {   // check all data is Entered
-
-            if (!(req.body[data])) {
+            if (!req.body[data]) {
                 res.json({
                     message: `${data} is required`
                 })
@@ -17,7 +16,7 @@ const signup = async (req, res) => {
         })
 
         //if user has been already exits then
-        let alreadyExituser = await user.findOne({ email: email });
+        let alreadyExituser = await user.findOne({ email });
 
         if (alreadyExituser) {
             return res.json({
@@ -28,26 +27,29 @@ const signup = async (req, res) => {
         // if user not already exits then
         let hashPassword = await bcrypt.hash(password, 10);
 
-        let createUser = user.create({
+        let createUser =await user.create({
             name,
             email,
-            password: hashPassword
+            password: hashPassword  
         })
-        if (createUser) {
-            createUser = await user.save();
+      
+       if(createUser){
+           
+            createUser = await createUser.save();
+            
             return res.json({
-                message: "user created successfully",
-                data: createUser
+                message : "user create successfully",
+                data : createUser
             })
-        } else {
-            return res.json({
-                message: "Something went wrong"
+       }else{
+         return res.json({
+                message : "something went wrong",
             })
-        }
-
+       }
     } catch (error) {
         res.json({
             message: error.message
+           
         })
     }
 }
