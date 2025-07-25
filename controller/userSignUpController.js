@@ -1,4 +1,4 @@
-import { mergeConfig } from "axios";
+import jwt from "jsonwebtoken"
 import user from "../models/user.js";
 import bcrypt from "bcrypt"
 
@@ -35,7 +35,6 @@ const signup = async (req, res) => {
         })
 
         if (createUser) {
-
             createUser = await createUser.save();
 
             return res.json({
@@ -54,40 +53,52 @@ const signup = async (req, res) => {
         })
     }
 }
- const login = async(req,res)=>{
-         try {
-            let {email,password} = req.body
-            let requiredfield = ["email","password"];
-            requiredfield.forEach((field)=>{
-                if(!req.body[field]){
-                    return res.json({
-                        message : `${field} is required`
-                    })
-                }
+const login = async (req, res) => {
+    try {
+        let { email, password } = req.body
+        let requiredfield = ["email", "password"];
+        requiredfield.forEach((field) => {
+            if (!req.body[field]) {
+                return res.json({
+                    message: `${field} is required`
+                })
+            }
+        })
+
+        let checkUserExit = await user.findOne({ email })
+        if (!checkUserExit) {
+            res.json({
+                message: "email does not exit please signup"
             })
-           let checkUserExit = await user.findOne({email})
-           if(!checkUserExit){
-               res.json({
-                        message : "email does not exit please signup"
-                    })
-           }
-           let isPasswordMatch = await bcrypt.compare(password,checkUserExit?.password)
-        //    console.log(isPasswordMatch); //true
-          if(!isPasswordMatch){
-               return res.json({
-                message : "invalid credentials"
-               })
-           }else{
+        }
+        let isPasswordMatch = await bcrypt.compare(password, checkUserExit?.password)
+
+        if (!isPasswordMatch) {
             return res.json({
-                message : "login successfully",
-                data : checkUserExit
+                message: "invalid credentials"
             })
-           }
-        } catch (error) {
-             res.json({
+        }
+
+        let sendData = {
+            name: checkUserExit.name,
+            email: checkUserExit.email,
+            _id: checkUserExit._id
+        }
+        // console.log(sendData);
+
+        let token = await jwt.sign(sendData, "hello");
+        console.log(token);
+
+        res.json({
+            message: "login successfully",
+            data: sendData
+        })
+
+    } catch (error) {
+        res.json({
             message: error.message
 
         })
-         }
- }
-export { signup,login }
+    }
+}
+export { signup, login }
