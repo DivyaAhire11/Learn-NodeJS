@@ -1,6 +1,9 @@
 import jwt from "jsonwebtoken"
 import user from "../models/user.js";
 import bcrypt from "bcrypt"
+// import cookies from cookies
+import { config } from "dotenv"
+config();
 
 const signup = async (req, res) => {
     try {
@@ -84,14 +87,14 @@ const login = async (req, res) => {
             email: checkUserExit.email,
             _id: checkUserExit._id
         }
-        // console.log(sendData);
 
-        let token = await jwt.sign(sendData, "hello");
-        console.log(token);
+
+        let token = await jwt.sign(sendData, process.env.JWT_SECRET, { expiresIn: "1h" });
+        res.cookies("token", token);
 
         res.json({
             message: "login successfully",
-            data: sendData
+            token: token
         })
 
     } catch (error) {

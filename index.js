@@ -13,8 +13,12 @@ import { healthControler } from "./controller/generalController.js";
 import { signup, login } from "./controller/userSignUpController.js";
 import connectdb from "./config/connectdb.js"
 
-app.get("/health", healthControler);
 
+//middleware
+import logger from "./middleware/logger.js"
+
+
+app.get("/health", healthControler);
 app.post("/signUp", signup);
 app.post("/login", login);
 
